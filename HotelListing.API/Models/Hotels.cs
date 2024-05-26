@@ -12,5 +12,8 @@ namespace HotelListing.API.Models
         public int CountryId { get; set; }
         public Country? country { get; set; }
 
+        public int PricePerNight { get; set; }
+
+
     }
 }

@@ -4,6 +4,7 @@ using HotelListing.API.DataTarnsferObject;
 using HotelListing.API.DataTarnsferObject.Country;
 using HotelListing.API.IRepository;
 using HotelListing.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace HotelListing.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class CountriesController : ControllerBase
     {
         private readonly ICountryRepository _repository;
@@ -53,6 +55,7 @@ namespace HotelListing.API.Controllers
             }
         }
         [HttpPost]
+        [Authorize(Roles ="Administrator")]
         public async Task<ActionResult> AddCountries(CreateCountryDto createCountry)
         {
           var country= _mapper.Map<Country>(createCountry);
@@ -62,12 +65,13 @@ namespace HotelListing.API.Controllers
 
         }
         [HttpDelete]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult> DeleteCountries(int Id)
         {
             var countries = await _repository.GetAsync(Id);
             if (countries != null)
             {
-                _repository.DeleteAsync(Id);
+              await  _repository.DeleteAsync(Id);
                  return Ok(countries);
 
             }
@@ -77,6 +81,7 @@ namespace HotelListing.API.Controllers
             }
         }
         [HttpPut]
+        [Authorize(Roles = "Administrator")]
         public async Task <ActionResult> UpdateCountries(int ID ,UpdateDto update) {
             if (ID!=update.ID) {
             return BadRequest();
